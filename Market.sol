@@ -414,9 +414,6 @@ contract Market is Ownable, ERC1155Receiver {
         // jumlah token erc20 yang akan dikirimkan kepada seller 
         uint256 tokenForSeller = total.sub(tokenFeeForAdmin);
 
-        // 1. sc ini kirim NFT kepada buyer 
-        _safeNftTransferFrom(address(this), buyer, sellFixs[_id].nftId, _amount);
-
         // 2. buyer mengirimkan ERC20 kepada seller
         _safeTwTransferFrom(tokenAddress, buyer, seller, tokenForSeller);
 
@@ -433,9 +430,12 @@ contract Market is Ownable, ERC1155Receiver {
             emit EventDeleteSell( _id );
         }
         else {
-            // haasil harus dikurangkan dan disimpan kembali dalam blockchain 
+            // hasil harus dikurangkan dan disimpan kembali dalam blockchain 
             sellFixs[_id].nftTotal = (sellFixs[_id].nftTotal).sub(_amount);
         }
+        
+        // 1. sc ini kirim NFT kepada buyer 
+        _safeNftTransferFrom(address(this), buyer, sellFixs[_id].nftId, _amount);
     }
 
     function swapAuc(uint _id) public payable onlyAucExecutor  {
