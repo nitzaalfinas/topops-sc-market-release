@@ -275,6 +275,9 @@ contract Market is Ownable, ERC1155Receiver {
 
         // kembalikan NFT dia 
         _safeNftTransferFrom(address(this), msg.sender, sellFixs[_listId].nftId, sellFixs[_listId].nftTotal);
+        
+        // nft yang tersimpan dijadikan 0 karena sudah dikembalikan
+        sellFixs[_listId].nftTotal = 0;
 
         // catat sebagai executed
         sellFixs[_listId].executed = true;
