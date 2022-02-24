@@ -422,6 +422,11 @@ contract Market is Ownable, ERC1155Receiver {
 
         // 4. jika hasil akhir seller token jadi 0, maka ini harus di delisting 
         if(sellFixs[_id].nftTotal == _amount) {
+        
+            // dikurangi sehingga hasilnya 0.
+            // pada tempat ini kita jadikan saja paksa nilainya langsung jadi 0
+            // karena nftTotal sama dengan _amount yang diminta
+            sellFixs[_id].nftTotal = 0;
 
             // catat sebagai executed
             sellFixs[_id].executed = true;
