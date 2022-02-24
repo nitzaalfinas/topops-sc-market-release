@@ -161,12 +161,11 @@ contract Market is Ownable, ERC1155Receiver {
     // --- only admin sections ------
 
 
-
     // --- bagian yang dipakai bersama-sama  -----------------------------
-    function _setReputationForCompleteSell(address _seller, address _buyer) private {
-        repSellers[_seller] = repSellers[_seller] + 1;
-        repBuyers[_buyer] = repBuyers[_buyer] + 1;   
-    }
+    // function _setReputationForCompleteSell(address _seller, address _buyer) private {
+    //     repSellers[_seller] = repSellers[_seller] + 1;
+    //     repBuyers[_buyer] = repBuyers[_buyer] + 1;   
+    // }
     
     function _safeTwTransferFrom(IERC20 token, address sender, address recipient, uint256 amount) private {
         bool sent = token.transferFrom(sender, recipient, amount);
@@ -273,14 +272,14 @@ contract Market is Ownable, ERC1155Receiver {
         // hanya boleh diupdate jika executed == false 
         require(sellFixs[_listId].executed == false, "Sell executed");
 
-        // kembalikan NFT dia 
-        _safeNftTransferFrom(address(this), msg.sender, sellFixs[_listId].nftId, sellFixs[_listId].nftTotal);
-        
-        // nft yang tersimpan dijadikan 0 karena sudah dikembalikan
-        sellFixs[_listId].nftTotal = 0;
-
         // catat sebagai executed
         sellFixs[_listId].executed = true;
+        
+        // kembalikan NFT dia 
+        _safeNftTransferFrom(address(this), msg.sender, sellFixs[_listId].nftId, sellFixs[_listId].nftTotal);
+
+        // nft yang tersimpan dijadikan 0 karena sudah dikembalikan
+        sellFixs[_listId].nftTotal = 0;
 
         return true;
     }
