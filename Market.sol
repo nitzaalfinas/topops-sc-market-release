@@ -386,7 +386,15 @@ contract Market is Ownable, ERC1155Receiver {
         sellAucPrices[_id][newAucCount] = _priceAll;
         // rank based on address 
         sellAucAddressRanks[_id][newAucCount] = msg.sender;
-
+        
+        // jika count bid pada id sell ini lebih dari 1, maka token yang tersimpan dikembalikan
+        // karena jika masih 0, maka itu adalah seller
+        // jika masih 1, maka ini adalah bidder pertama
+        // jika besar dari 1 atau dikatakan 2, 3, 4, maka yang mempunyai id sebelumnya wajib dipulangkan
+        if(newAucCount > 1) {
+            uint256 idSebelum = newAucCount - 1;            
+            tokenAddress.transfer(sellAucAddressRanks[_id][idSebelum], sellAucPrices[_id][idSebelum]);
+        }
     }
 
     
@@ -466,7 +474,7 @@ contract Market is Ownable, ERC1155Receiver {
             // 1. Jumlah yang submit berarti adalah id terakhir atau dengan bid terbesar 
             uint256 indexWinner = sellAucCounts[_id];
 
-            // 2. cari tahu addressnya 
+            // 2. cari tahu address winner
             address buyer = sellAucAddressRanks[_id][indexWinner];
             // --- buyer adalah pemenang. ---
 
@@ -490,16 +498,6 @@ contract Market is Ownable, ERC1155Receiver {
             // tetapi karena boken buyer sudah ada dalam smartcontract, maka dikirim dari smartcontract saja
             tokenAddress.transfer(admFeeAddr, tokenFeeForAdmin);
 
-            // 4. kembalikan semua token 
-            // tetapi token dengan id terakhir tidak dikembalikan
-            uint256 totalAuc = sellAucCounts[_id];
-            for(uint256 i=1; i <= totalAuc; i++) {
-                if(indexWinner != i) { // cegah mengembalikan kepada pemenang
-
-                    // kembalikan kepada yang bukan pemenang 
-                    tokenAddress.transfer(sellAucAddressRanks[_id][i], sellAucPrices[_id][i]);
-                }
-            }
         }
         else {
             _safeNftTransferFrom(address(this), sellAucs[_id].seller, sellAucs[_id].nftId, sellAucs[_id].nftTotal);       
