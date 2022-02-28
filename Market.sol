@@ -453,8 +453,11 @@ contract Market is Ownable, ERC1155Receiver {
         _safeNftTransferFrom(address(this), buyer, sellFixs[_id].nftId, _amount);
     }
 
-    function swapAuc(uint _id) public payable onlyAucExecutor  {
+    function swapAuc(uint256 _id) public payable onlyAucExecutor  {
         require(contractPause == false, "Contract pause");
+        
+        // cek dulu apakah market memang tipe auction 
+        require(sells[_id] == 2, "Not auction");
 
         // eksekusi hanya bisa dilakukan setelah auction expire
         require(sellAucs[_id].endTime < block.timestamp, "Auction is not over yet");
