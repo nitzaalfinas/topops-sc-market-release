@@ -481,7 +481,7 @@ contract Market is Ownable, ERC1155Receiver {
             // --- buyer adalah pemenang. ---
 
             // harga semua nft yang di auction kan 
-            uint256 priceAllNft = sellAucs[_id].priceAll;
+            uint256 priceAllNft = sellAucPrices[_id][indexWinner];
 
             // kalkulasi fee  
             uint256 tokenFeeForAdmin = priceAllNft.mul(feebp).div(10000); // persentase
