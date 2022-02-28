@@ -465,9 +465,9 @@ contract Market is Ownable, ERC1155Receiver {
         // hanya boleh di eksekusi 1x
         require(sellAucs[_id].executed == false, "Has been executed");
 
-        // kembalikan saja jika tidak ada yang bid
-        // tetapi ini nanti sebaiknya harus dibuat function 1 lagi supaya admin tidak bayar fee untuk eksekusi ini 
         if(sellAucCounts[_id] > 0) {
+            // jika ada yang nge-bid, maka tetapkan pemenang dan kirim NFT
+            // penjual disini dapat token ERC20
 
             // atur seller
             address seller = sellAucs[_id].seller;
@@ -501,7 +501,9 @@ contract Market is Ownable, ERC1155Receiver {
             tokenAddress.transfer(admFeeAddr, tokenFeeForAdmin);
 
         }
-        else {
+        else if (sellAucCounts[_id] == 0) {
+            // jika gak ada yang nge-bid
+            
             _safeNftTransferFrom(address(this), sellAucs[_id].seller, sellAucs[_id].nftId, sellAucs[_id].nftTotal);       
         }
 
