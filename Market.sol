@@ -402,7 +402,7 @@ contract Market is Ownable, ERC1155Receiver {
     * @_id adalah ID dari sells
     * @_amount adalah jumlah NFT yang diinginkan
     */
-    function swap(uint256 _id, uint256 _amount) public payable {
+    function swap(uint256 _id, uint256 _amount, uint256 _priceOne) public payable {
         require(contractPause == false, "Contract pause");
 
         // atur variable 
@@ -411,6 +411,10 @@ contract Market is Ownable, ERC1155Receiver {
 
         // jumlah yang diinginkan harus lebih kecil dari jumlah yang ada di market 
         require(sellFixs[_id].nftTotal >= _amount, "Number of requests not met");
+
+        // cegah mendapatkan serangan pada update sell.
+        // karena serangan bisa dilakukan dengan mengupdate harga
+        require(sellFixs[_id].priceOne == _priceOne, "Current price changed");
 
         // kalkulasi jumlah yang harus dibayarkan oleh buyer 
         uint256 total = _amount.mul(sellFixs[_id].priceOne);
