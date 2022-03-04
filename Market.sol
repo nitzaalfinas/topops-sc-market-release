@@ -413,8 +413,11 @@ contract Market is Ownable, ERC1155Receiver {
         require(sellFixs[_id].nftTotal >= _amount, "Number of requests not met");
 
         // cegah mendapatkan serangan pada update sell.
-        // karena serangan bisa dilakukan dengan mengupdate harga
-        require(sellFixs[_id].priceOne == _priceOne, "Current price changed");
+        // Karena serangan bisa dilakukan dengan mengupdate harga.
+        // Keterangan: Jika block untuk swap ter-eksekusi pada blockchain terlambat, maka harga akan update terlebih dahulu
+        //     Untuk pencegahan user mendapatkan harga sesuai dengan ekspektasinya, maka disini harus dicegah
+        //     ketika harga berubah.
+        require(sellFixs[_id].priceOne == _priceOne, "Sell price has changed");
 
         // kalkulasi jumlah yang harus dibayarkan oleh buyer 
         uint256 total = _amount.mul(sellFixs[_id].priceOne);
