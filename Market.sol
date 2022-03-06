@@ -750,6 +750,21 @@ contract Market is Ownable, ERC1155Receiver {
     function setAucExecutor(address _address) public onlyOwner {
         aucExecutor = _address;
     }
+
+    // hanya ada di development
+    // sementara ini digunakan untuk mengganti contract agar tidak capek reset database pada development
+    // tapi dipertimbangkan juga untuk production
+    function setNftAddress(IERC1155 _erc1155Address) public onlyOwner {
+        nftAddress = _erc1155Address;
+    }
+
+    // hanya ada di development
+    // sementara ini digunakan untuk mengganti contract agar tidak capek reset database pada development
+    // tapi dipertimbangkan juga untuk production
+    function setTokenAddress(IERC20 _erc20Address) public onlyOwner {
+        tokenAddress = _erc20Address;
+    }
+
     // --- only admin sections ------
 
 
